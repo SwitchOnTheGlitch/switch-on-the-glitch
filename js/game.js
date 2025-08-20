@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- VARIABILI GLOBALI E CONFIGURAZIONE ---
-    const API_URL = https://script.google.com/macros/s/AKfycbzHkn-yorhu1UlocZf9PDL-2HZU6DLxvO4qsrNhEY0zhkR5fJPyiKXz32JZRCgNOPCBvA/exec
-; // <-- INCOLLA IL TUO URL QUI
+    // --- CONFIGURAZIONE ---
+    const API_URL = "https://script.google.com/macros/s/AKfycbzHkn-yorhu1UlocZf9PDL-2HZU6DLxvO4qsrNhEY0zhkR5fJPyiKXz32JZRCgNOPCBvA/exec";
     
+    // --- VARIABILI GLOBALI ---
     let timerInterval;
     let timeLeft = 60;
-    let correctPassword = ""; // La password ora arriverà dall'API
+    let correctPassword = ""; // La password corretta arriverà dall'API
     let passwordAttempts = 5;
     let gamePassword = "";
     let boxId = "";
@@ -18,51 +18,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainVideo = document.getElementById('main-video');
     const uiLayer = document.getElementById('ui-layer');
     const muteButton = document.getElementById('mute-button');
-
-    // --- FUNZIONI API ---
-    async function callAPI(payload) {
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Necessario per le prime chiamate ad Apps Script
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-                 redirect: "follow"
-            });
-             // Poiché Apps Script con no-cors restituisce una risposta "opaca",
-             // non possiamo leggere direttamente il JSON di ritorno qui.
-             // La logica si baserà sull'invio dei dati. Per la verifica iniziale,
-             // dovremo passare la password al frontend.
-             // MODIFICA IMPORTANTE: Per leggere la risposta, la richiesta DEVE essere in modalità 'cors'
-             // e lo script Apps Script deve essere modificato leggermente.
-             // Per ora, procediamo con un workaround e poi sistemiamo.
-             // Semplifichiamo per ora: la richiesta GET è più semplice per iniziare.
-             return {}; // Placeholder
-        } catch (error) {
-            console.error('Errore API:', error);
-            showUI(`<h1 class="defeat">Errore di Connessione</h1><p>Impossibile contattare il server di gioco.</p>`);
-            return { status: 'error', message: error.toString() };
-        }
-    }
-
-
+    
     // --- FUNZIONI DI GESTIONE VIDEO E UI ---
     function playVideo(videoName, loop = false) {
         mainVideo.src = `media/videos/${videoName}.mp4`;
         mainVideo.loop = loop;
         mainVideo.muted = isMuted;
         mainVideo.style.display = 'block';
-        mainVideo.play().catch(e => console.log("Errore autoplay video:", e));
         mainVideo.onended = () => { if (loop) mainVideo.play(); };
+        mainVideo.play().catch(e => console.error("Errore autoplay video:", e));
     }
 
     function showUI(content) {
         gameContainer.innerHTML = content;
         uiLayer.style.display = 'flex';
     }
-
+    
     // --- GESTIONE AUDIO ---
     function toggleMute() {
         isMuted = !isMuted;
@@ -73,28 +44,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FLUSSO DEL GIOCO ---
 
-    // 1. STATO INIZIALE
+    // 1. STATO INIZIALE: Contatta l'API per verificare la box
     async function initializeGame() {
-        // Leggiamo l'ID della box dall'URL (es. ...?box=BOX001)
         const urlParams = new URLSearchParams(window.location.search);
         boxId = urlParams.get('box');
 
         if (!boxId) {
-            showUI(`<h1 class="defeat">ID Box Mancante</h1><p>Assicurati di accedere tramite il QR code corretto.</p>`);
+            showUI(`<h1 class="defeat">ID Box Mancante</h1><p>Scansiona il QR code corretto per iniziare.</p>`);
             return;
         }
 
-        // Chiamiamo l'API per verificare lo stato e ottenere la password
-        const response = await fetch(`${API_URL}?action=getGameData&boxId=${boxId}`);
-        const data = await response.json();
+        try {
+            // Contattiamo l'API per verificare lo stato e ottenere la password
+            const response = await fetch(`${API_URL}?action=getGameData&boxId=${boxId}`);
+            const data = await response.json();
 
-        if (data.status === 'success') {
-            correctPassword = data.password; // Salviamo la password corretta
-            showUI(`<h2 id="start-title">Risolvi il Glitch!</h2><button id="startButton">Vai</button>`);
-            document.getElementById('startButton').addEventListener('click', startGame);
-            playVideo("Presentazione", true);
-        } else {
-            showUI(`<h1 class="defeat">Box non disponibile</h1><p>${data.message}</p>`);
+            if (data.status === 'success') {
+                correctPassword = data.password; // Salviamo la password vera
+                showUI(`
+                    <h2 id="start-title">Risolvi il Glitch!</h2>
+                    <button id="startButton">Vai</button>
+                `);
+                document.getElementById('startButton').addEventListener('click', startGame);
+                playVideo("presentazione", true);
+            } else {
+                showUI(`<h1 class="defeat">Box non disponibile</h1><p>${data.message}</p>`);
+            }
+        } catch (error) {
+            console.error("Errore di comunicazione con l'API:", error);
+            showUI(`<h1 class="defeat">Errore di Connessione</h1><p>Impossibile contattare i server di gioco.</p>`);
         }
     }
     
@@ -102,7 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function startGame() {
         if (isMuted) toggleMute();
         sessionId = `SESSION-${Date.now()}`;
-        playVideo("Gioco", true);
+        playVideo("gioco", true);
+        
         showUI(`
             <div id="timer">Tempo Rimanente: ${timeLeft}</div>
             <div id="attempts-counter">Tentativi Rimasti: ${passwordAttempts}</div>
@@ -112,11 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div id="feedback-message" style="min-height: 24px;"></div>
         `);
+        
         document.getElementById('verifyButton').addEventListener('click', checkPassword);
         startTimer();
     }
 
-    // 3. CONTROLLO PASSWORD
+    // 3. CONTROLLO PASSWORD (ora usa la password dinamica)
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
         gamePassword = passwordInput.value;
@@ -136,21 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. FINE DEL GIOCO
+    // 4. FINE DEL GIOCO: Comunica il risultato all'API
     function endGame(isVictory, message) {
-        // Comunichiamo all'API la fine della sessione
         const resultPayload = {
             isVictory: isVictory,
             passwordUsed: gamePassword,
             attemptsLeft: passwordAttempts
         };
+        // Comunichiamo all'API la fine della sessione in background
         fetch(`${API_URL}?action=endSession&boxId=${boxId}&sessionId=${sessionId}&result=${JSON.stringify(resultPayload)}`);
 
-        // ...il resto della logica per mostrare video e UI
-        const finalVideo = isVictory ? "Vittoria" : (message.includes("Tempo") ? "Tempo" : "Tentativi");
+        const finalVideo = isVictory ? "vittoria" : (message.includes("Tempo") ? "tempo" : "tentativi");
         playVideo(finalVideo, true);
 
-        let finalUI = isVictory ? `
+        const finalUI = isVictory ? `
             <h1>VITTORIA!</h1><p>${message}</p>
             <div id="verification-data">
                 <p><strong>ID Vittoria:</strong> ${sessionId}</p>
@@ -158,14 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         ` : `
             <h1 class="defeat">SCONFITTA!</h1><p class="end-message">${message}</p>
-            <button id="restartButton">Esci</button>
+            <button id="restartButton">Riprova</button>
         `;
         showUI(finalUI);
         
         const restartButton = document.getElementById('restartButton');
         if (restartButton) {
-            // Potremmo voler reindirizzare a una pagina "grazie per aver giocato"
-            restartButton.addEventListener('click', () => window.close());
+            restartButton.addEventListener('click', () => location.reload());
         }
     }
 
@@ -184,7 +162,3 @@ document.addEventListener('DOMContentLoaded', () => {
     
     initializeGame();
 });
-
-// Nota: per far funzionare questo codice, dovrai modificare lo script Apps Script
-// per usare doGet(e) invece di doPost(e) e leggere i parametri dall'URL.
-// È una modifica più semplice per iniziare. Te la fornirò nel prossimo passaggio.
