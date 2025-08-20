@@ -63,25 +63,23 @@ body {
 #game-container {
     width: 800px;
     max-width: 95%;
+    min-height: 500px; /* Diamo un'altezza minima per coerenza */
     background-color: rgba(43, 43, 43, 0.85);
     border: 2px solid #444;
     border-radius: 10px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    justify-content: center; /* ## CORREZIONE 1 ## Centra il contenuto verticalmente */
+    align-items: center; /* ## CORREZIONE 2 ## Centra il contenuto orizzontalmente */
     gap: 20px;
     backdrop-filter: blur(10px);
-    position: relative; /* ## ECCO LA CORREZIONE! ## Aggiunto per ancorare gli elementi interni */
 }
 
 /* Stili per la schermata iniziale */
 #start-screen-container {
-    /* Ora questo si posizionerà al centro del #game-container, non della pagina */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 20;
+    /* ## CORREZIONE 3 ## Rimosso 'position: absolute' e le relative proprietà.
+       Ora si centra grazie a Flexbox del genitore #game-container */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -94,6 +92,7 @@ body {
     font-size: 4em;
     color: #fff;
     text-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+    text-align: center; /* Aggiunto per sicurezza su schermi piccoli */
 }
 
 #startButton {
@@ -111,6 +110,7 @@ body {
     text-transform: uppercase;
     font-family: 'Rubik Marker Hatch', cursive;
     animation: pulse-animation 2s infinite;
+    flex-shrink: 0; /* Impedisce al pulsante di rimpicciolirsi */
 }
 
 @keyframes pulse-animation {
@@ -146,11 +146,11 @@ body {
     font-family: 'Rubik Marker Hatch', cursive;
 }
 #passwordInput { background-color: #333; color: #f0f0f0; font-family: 'Roboto', sans-serif; }
-#verifyButton { background-color: #28a745; color: #fff; cursor: pointer; }
+#verifyButton { background-color: #28a245; color: #fff; cursor: pointer; }
 
 h1 { 
     font-size: 3em; 
-    color: #28a745; 
+    color: #28a245; 
     font-family: 'Rubik Glitch', cursive;
     text-align: center;
 }
