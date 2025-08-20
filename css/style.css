@@ -61,27 +61,28 @@ body {
 
 /* Contenitore principale del gioco */
 #game-container {
+    /* ## MODIFICHE QUI ## */
+    background-color: transparent; /* Sfondo trasparente */
+    border: none; /* Nessun bordo */
+    backdrop-filter: none; /* Nessun effetto sfocatura */
+
     width: 800px;
     max-width: 95%;
     min-height: 500px;
-    background-color: rgba(43, 43, 43, 0.85);
-    border: 2px solid #444;
-    border-radius: 10px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px; /* Aumentato lo spazio tra gli elementi */
-    backdrop-filter: blur(10px);
+    gap: 30px;
 }
 
-/* ## Stile per la schermata iniziale (ora elementi diretti) ## */
+/* Stile per la schermata iniziale */
 #start-title {
     font-family: 'Rubik Glitch', cursive;
     font-size: 4em;
     color: #fff;
-    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8), 0 0 5px rgba(0, 0, 0, 1); /* Aggiunta un'ombra nera per più contrasto */
     text-align: center;
 }
 
@@ -115,6 +116,7 @@ body {
     font-size: 1.5em;
     font-weight: normal;
     margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 1); /* Ombra per leggibilità sul video */
 }
 #timer { color: #ffc107; }
 #attempts-counter { color: #17a2b8; }
@@ -126,6 +128,7 @@ body {
     gap: 10px;
     flex-wrap: wrap;
     font-family: 'Roboto', sans-serif;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 1);
 }
 
 #passwordInput, #verifyButton {
@@ -143,11 +146,12 @@ h1 {
     color: #28a245; 
     font-family: 'Rubik Glitch', cursive;
     text-align: center;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 1);
 }
 h1.defeat { color: #dc3545; }
 
 #verification-data {
-    background-color: #333;
+    background-color: rgba(51, 51, 51, 0.8); /* Leggera trasparenza anche qui */
     padding: 15px;
     border-radius: 5px;
     margin-top: 20px;
