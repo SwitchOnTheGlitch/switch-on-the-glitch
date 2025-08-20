@@ -41,14 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. STATO INIZIALE
     function initializeGame() {
-        showUI(`<button id="startButton">Vai</button>`);
+        // ## MODIFICA ##: Reinserito il titolo H2
+        showUI(`
+            <h2 id="start-title">Risolvi il Glitch!</h2>
+            <button id="startButton">Vai</button>
+        `);
         document.getElementById('startButton').addEventListener('click', startGame);
         playVideo("Presentazione", true);
     }
     
     // 2. AVVIO DEL GIOCO
     function startGame() {
-        // ## MODIFICA ##: Attiviamo l'audio automaticamente
         if (isMuted) {
             toggleMute();
         }
@@ -108,22 +111,21 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             finalVideo = message.includes("Tempo") ? "Tempo" : "Tentativi";
+            // ## MODIFICA ##: Aggiunta la classe "end-message" al paragrafo
             finalUI = `
                 <h1 class="defeat">SCONFITTA!</h1>
-                <p>${message}</p>
+                <p class="end-message">${message}</p>
                 <button id="restartButton">Riprova</button>
             `;
         }
         
-        // ## MODIFICA ##: Mostriamo video e UI contemporaneamente
-        playVideo(finalVideo, true); // Tutti i video ora girano in loop
+        playVideo(finalVideo, true);
         showUI(finalUI);
         
-        // Se c'è il pulsante riprova, gli diamo la sua funzione
         const restartButton = document.getElementById('restartButton');
         if (restartButton) {
             restartButton.addEventListener('click', () => {
-                location.reload(); // Ricarica la pagina per ricominciare
+                location.reload();
             });
         }
     }
