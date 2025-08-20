@@ -1,3 +1,6 @@
+/* 1. IMPORTAZIONE DEI FONT */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Rubik+Glitch&family=Rubik+Marker+Hatch&display=swap');
+
 /* Stile base per resettare la pagina */
 * {
     box-sizing: border-box;
@@ -6,8 +9,8 @@
 }
 
 body {
-    font-family: sans-serif;
-    background-color: #000; /* Sfondo nero di default */
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
     color: #f0f0f0;
 }
 
@@ -16,50 +19,110 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* 100% della larghezza della finestra */
-    height: 100vh; /* 100% dell'altezza della finestra */
-    z-index: 1; /* Sta sotto l'interfaccia */
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
 }
 
 #main-video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Riempie lo schermo senza distorcere il video */
+    object-fit: cover;
 }
 
 /* Layer per l'interfaccia utente */
 #ui-layer {
     position: relative;
-    z-index: 10; /* Sta sopra il video */
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
+/* Pulsante Mute/Unmute */
+#mute-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Contenitore principale del gioco */
 #game-container {
     width: 800px;
     max-width: 95%;
-    background-color: rgba(43, 43, 43, 0.85); /* Sfondo semi-trasparente */
+    background-color: rgba(43, 43, 43, 0.85);
     border: 2px solid #444;
     border-radius: 10px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    /* Effetto "vetro smerigliato" per una migliore leggibilità */
     backdrop-filter: blur(10px);
 }
 
-/* Stili per i contenuti generati da JS */
-#timer, #attempts-counter, #feedback-message, h1, #verification-data {
-    text-align: center;
+/* ## NUOVI STILI PER LA SCHERMATA INIZIALE ## */
+#start-screen-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Spazio tra titolo e pulsante */
+    width: 100%;
 }
 
+#start-title {
+    font-family: 'Rubik Glitch', cursive;
+    font-size: 4em; /* Aumentiamo un po' la dimensione */
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8); /* Ombra arancione */
+}
+
+/* Stile pulsante Inizia */
+#startButton {
+    width: 120px;
+    height: 120px;
+    font-size: 1.8em; /* Testo più grande */
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    font-family: 'Rubik Marker Hatch', cursive;
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 20px 0 rgba(255, 165, 0, 0.7); }
+    50% { box-shadow: 0 0 30px 10px rgba(40, 167, 69, 0.7); }
+    100% { box-shadow: 0 0 20px 0 rgba(255, 165, 0, 0.7); }
+}
+
+/* Stili per i contenuti di gioco */
 #timer, #attempts-counter {
+    font-family: 'Rubik Marker Hatch', cursive;
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: normal;
     margin-bottom: 15px;
 }
 #timer { color: #ffc107; }
@@ -71,20 +134,25 @@ body {
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    font-family: 'Roboto', sans-serif;
 }
 
-#passwordInput, #verifyButton, #startButton {
+#passwordInput, #verifyButton {
     padding: 10px;
     font-size: 1em;
     border-radius: 5px;
     border: 1px solid #555;
+    font-family: 'Rubik Marker Hatch', cursive;
 }
-
-#passwordInput { background-color: #333; color: #f0f0f0; }
+#passwordInput { background-color: #333; color: #f0f0f0; font-family: 'Roboto', sans-serif; }
 #verifyButton { background-color: #28a745; color: #fff; cursor: pointer; }
-#startButton { background-color: #007bff; color: #fff; cursor: pointer; font-size: 1.2em; padding: 10px 20px; }
 
-h1 { font-size: 3em; color: #28a745; }
+h1 { 
+    font-size: 3em; 
+    color: #28a745; 
+    font-family: 'Rubik Glitch', cursive;
+    text-align: center;
+}
 h1.defeat { color: #dc3545; }
 
 #verification-data {
@@ -92,5 +160,5 @@ h1.defeat { color: #dc3545; }
     padding: 15px;
     border-radius: 5px;
     margin-top: 20px;
-    font-family: monospace;
+    font-family: 'Roboto', monospace;
 }

@@ -7,46 +7,69 @@ document.addEventListener('DOMContentLoaded', () => {
     let passwordAttempts = 5;
     let gamePassword = "";
     let boxId = "";
+    let isMuted = true;
 
     // --- RIFERIMENTI AGLI ELEMENTI HTML ---
     const gameContainer = document.getElementById('game-container');
     const mainVideo = document.getElementById('main-video');
     const uiLayer = document.getElementById('ui-layer');
+    const muteButton = document.getElementById('mute-button');
 
     // --- FUNZIONI DI GESTIONE VIDEO E UI ---
     function playVideo(videoName, loop = false, onEndedCallback = null) {
         mainVideo.src = `media/videos/${videoName}.mp4`;
         mainVideo.loop = loop;
-        mainVideo.style.display = 'block'; // Mostra il video
-        mainVideo.play();
+        mainVideo.muted = isMuted;
+        mainVideo.style.display = 'block';
         
-        // Se c'è una funzione da eseguire alla fine del video, la impostiamo
+        let playPromise = mainVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Autoplay bloccato, attendo interazione utente.");
+            });
+        }
+        
         mainVideo.onended = onEndedCallback;
     }
 
     function showUI(content) {
         gameContainer.innerHTML = content;
-        uiLayer.style.display = 'flex'; // Mostra l'interfaccia
+        uiLayer.style.display = 'flex';
     }
 
     function hideUI() {
-        uiLayer.style.display = 'none'; // Nasconde l'interfaccia
+        uiLayer.style.display = 'none';
     }
+    
+    // --- GESTIONE AUDIO ---
+    function toggleMute() {
+        isMuted = !isMuted;
+        mainVideo.muted = isMuted;
+        muteButton.textContent = isMuted ? '🔇' : '🔊';
+    }
+    
+    muteButton.addEventListener('click', toggleMute);
 
     // --- FLUSSO DEL GIOCO ---
 
-    // 1. STATO INIZIALE: Video di presentazione
+    // 1. STATO INIZIALE: Video di presentazione con titolo e nuovo pulsante
     function initializeGame() {
-        // Mostra il pulsante "Inizia" sopra il video
-        showUI(`<button id="startButton">Inizia Gioco</button>`);
+        // ## ECCO LE MODIFICHE! ##
+        // Aggiungiamo un titolo H2 e cambiamo il testo del pulsante in "Vai"
+        showUI(`
+            <div id="start-screen-container">
+                <h2 id="start-title">Risolvi il Glitch!</h2>
+                <button id="startButton">Vai</button>
+            </div>
+        `);
         document.getElementById('startButton').addEventListener('click', startGame);
         playVideo("Presentazione", true);
     }
     
-    // 2. AVVIO DEL GIOCO: Click su "Inizia"
+    // 2. AVVIO DEL GIOCO
     function startGame() {
         boxId = `BOX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-        playVideo("Gioco", true); // Video di gioco in background
+        playVideo("Gioco", true);
         
         showUI(`
             <div id="timer">Tempo Rimanente: ${timeLeft}</div>
@@ -85,16 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. FINE DEL GIOCO
     function endGame(isVictory, message) {
-        hideUI(); // Nascondiamo l'interfaccia per goderci il video finale
-        
+        hideUI();
         let finalVideo;
         let onEndCallback;
 
         if (isVictory) {
             finalVideo = "Vittoria";
             onEndCallback = () => {
-                // Finito il video, mostriamo i dati di verifica
-                mainVideo.style.display = 'none'; // Nascondiamo anche il video
+                mainVideo.style.display = 'none';
                 showUI(`
                     <h1>VITTORIA!</h1>
                     <p>${message}</p>
