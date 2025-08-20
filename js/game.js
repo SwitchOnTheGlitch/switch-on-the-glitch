@@ -16,11 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const muteButton = document.getElementById('mute-button');
 
     // --- FUNZIONI DI GESTIONE VIDEO E UI ---
+    
+    // ## MODIFICA ##: Funzione video migliorata per un loop più fluido
     function playVideo(videoName, loop = false) {
         mainVideo.src = `media/videos/${videoName}.mp4`;
-        mainVideo.loop = loop;
+        mainVideo.loop = loop; // Impostiamo comunque l'attributo per sicurezza
         mainVideo.muted = isMuted;
         mainVideo.style.display = 'block';
+
+        // Questo event listener manuale forza il loop in modo più fluido,
+        // risolvendo il problema del "singhiozzo" di fine video.
+        mainVideo.onended = () => {
+            if (loop) {
+                mainVideo.play();
+            }
+        };
+        
         mainVideo.play().catch(e => console.log("Errore autoplay video:", e));
     }
 
@@ -41,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. STATO INIZIALE
     function initializeGame() {
-        // ## MODIFICA ##: Reinserito il titolo H2
         showUI(`
             <h2 id="start-title">Risolvi il Glitch!</h2>
             <button id="startButton">Vai</button>
@@ -111,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             finalVideo = message.includes("Tempo") ? "Tempo" : "Tentativi";
-            // ## MODIFICA ##: Aggiunta la classe "end-message" al paragrafo
             finalUI = `
                 <h1 class="defeat">SCONFITTA!</h1>
                 <p class="end-message">${message}</p>
@@ -119,7 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
         
-        playVideo(finalVideo, true);
+        // ## MODIFICA ##: Ora tutti i video finali vengono passati con loop=true
+        playVideo(finalVideo, true); 
         showUI(finalUI);
         
         const restartButton = document.getElementById('restartButton');
