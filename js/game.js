@@ -1,38 +1,78 @@
-// Questo evento assicura che il nostro codice venga eseguito solo dopo
-// che tutta la pagina HTML è stata caricata e resa pronta dal browser.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. SELEZIONIAMO GLI ELEMENTI HTML
-    // Prendiamo i riferimenti agli elementi della pagina con cui dobbiamo interagire,
-    // usando i loro ID.
+    // --- VARIABILI GLOBALI DEL GIOCO ---
+    let timerInterval; // Variabile per memorizzare il nostro timer
+    let timeLeft = 60; // Tempo iniziale in secondi
+    const CORRECT_PASSWORD = "test"; // La password corretta (per ora)
+
+    // --- RIFERIMENTI AGLI ELEMENTI HTML ---
     const startButton = document.getElementById('startButton');
     const questionContainer = document.getElementById('question-container');
     const controlsContainer = document.getElementById('controls-container');
     const videoContainer = document.getElementById('video-container');
 
-    // 2. AGGIUNGIAMO UN "ASCOLTATORE" DI EVENTI
-    // Diciamo al pulsante "Inizia" di rimanere in ascolto per un click.
-    // Quando l'utente clicca, verrà eseguita la funzione "startGame".
+    // --- EVENT LISTENER ---
     startButton.addEventListener('click', startGame);
 
-    // 3. DEFINIAMO LA FUNZIONE CHE FA PARTIRE IL GIOCO
+    // --- FUNZIONI PRINCIPALI ---
     function startGame() {
-        console.log("Il gioco è iniziato!"); // Un messaggio per noi nella console del browser
-
-        // Nascondiamo il contenitore del video e quello dei controlli iniziali
+        // Nascondiamo gli elementi iniziali
         videoContainer.style.display = 'none';
         controlsContainer.style.display = 'none';
 
-        // Modifichiamo l'HTML all'interno del "question-container"
-        // per mostrare la nuova schermata.
+        // Creiamo la nuova schermata di gioco
         questionContainer.innerHTML = `
-            <div id="timer">Tempo Rimanente: 60</div>
+            <div id="timer">Tempo Rimanente: ${timeLeft}</div>
             <div id="password-section">
                 <label for="passwordInput">Inserisci la Password:</label>
                 <input type="password" id="passwordInput" placeholder="Scrivi qui...">
-                <button id="verifyButton">Verifica Password</button>
+                <button id="verifyButton">Verifica</button>
             </div>
+            <div id="feedback-message"></div>
         `;
+        
+        // Colleghiamo la funzione di verifica al nuovo pulsante
+        const verifyButton = document.getElementById('verifyButton');
+        verifyButton.addEventListener('click', checkPassword);
+
+        // Facciamo partire il timer
+        startTimer();
     }
 
-}); // Fine dell'evento DOMContentLoaded
+    function startTimer() {
+        const timerElement = document.getElementById('timer');
+        // Usiamo setInterval per eseguire una funzione ogni 1000ms (1 secondo)
+        timerInterval = setInterval(() => {
+            timeLeft--; // Decrementiamo il tempo
+            timerElement.textContent = `Tempo Rimanente: ${timeLeft}`;
+
+            // Se il tempo scade
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval); // Stoppiamo il timer
+                endGame(false); // Chiamiamo la funzione di fine gioco (sconfitta)
+            }
+        }, 1000);
+    }
+    
+    function checkPassword() {
+        const passwordInput = document.getElementById('passwordInput');
+        const feedbackMessage = document.getElementById('feedback-message');
+        
+        if (passwordInput.value === CORRECT_PASSWORD) {
+            clearInterval(timerInterval); // Stoppiamo il timer
+            endGame(true); // Chiamiamo la funzione di fine gioco (vittoria)
+        } else {
+            feedbackMessage.textContent = "Password errata. Riprova!";
+            feedbackMessage.style.color = "red";
+        }
+    }
+
+    function endGame(isVictory) {
+        if (isVictory) {
+            questionContainer.innerHTML = `<h1>VITTORIA!</h1><p>Password corretta!</p>`;
+        } else {
+            questionContainer.innerHTML = `<h1>SCONFITTA!</h1><p>Tempo scaduto!</p>`;
+        }
+    }
+
+});
