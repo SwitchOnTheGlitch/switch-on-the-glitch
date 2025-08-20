@@ -1,95 +1,70 @@
-/* Regole di base per l'intera pagina */
+/* Stile base per resettare la pagina */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: sans-serif;
-    background-color: #1a1a1a;
+    background-color: #000; /* Sfondo nero di default */
     color: #f0f0f0;
+}
+
+/* Layer per i video a schermo intero */
+#video-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* 100% della larghezza della finestra */
+    height: 100vh; /* 100% dell'altezza della finestra */
+    z-index: 1; /* Sta sotto l'interfaccia */
+}
+
+#main-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Riempie lo schermo senza distorcere il video */
+}
+
+/* Layer per l'interfaccia utente */
+#ui-layer {
+    position: relative;
+    z-index: 10; /* Sta sopra il video */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
 }
 
-/* Stile del contenitore principale del gioco */
+/* Contenitore principale del gioco */
 #game-container {
     width: 800px;
     max-width: 95%;
-    background-color: #2b2b2b;
+    background-color: rgba(43, 43, 43, 0.85); /* Sfondo semi-trasparente */
     border: 2px solid #444;
     border-radius: 10px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    position: relative; /* Necessario per posizionare il pulsante sopra il video */
+    /* Effetto "vetro smerigliato" per una migliore leggibilità */
+    backdrop-filter: blur(10px);
 }
 
-/* Stili per le sezioni interne */
-#video-container, #question-container, #controls-container {
-    border: 1px dashed #555;
-    padding: 15px;
-    border-radius: 5px;
+/* Stili per i contenuti generati da JS */
+#timer, #attempts-counter, #feedback-message, h1, #verification-data {
     text-align: center;
 }
 
-/* Stile per il tag video */
-#main-video {
-    border-radius: 5px;
-    background-color: #000;
-}
-
-/* Altezza del contenitore video */
-#video-container {
-    min-height: 400px;
-    background-color: #000;
-    padding: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Posizioniamo il pulsante 'Inizia' sopra il video */
-#controls-container {
-    position: absolute;
-    bottom: 40px; /* Distanza dal basso */
-    left: 50%;
-    transform: translateX(-50%); /* Lo centra perfettamente */
-    border: none;
-    background: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente */
-    padding: 10px;
-}
-
-/* Stile per il pulsante d'inizio */
-#startButton {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#startButton:hover {
-    background-color: #0056b3;
-}
-
-/* Stile per il timer e il contatore tentativi */
 #timer, #attempts-counter {
     font-size: 1.5em;
     font-weight: bold;
-    text-align: center;
     margin-bottom: 15px;
 }
-#timer {
-    color: #ffc107;
-}
-#attempts-counter {
-    color: #17a2b8;
-}
+#timer { color: #ffc107; }
+#attempts-counter { color: #17a2b8; }
 
-/* Contenitore per la sezione password */
 #password-section {
     display: flex;
     justify-content: center;
@@ -98,56 +73,24 @@ body {
     flex-wrap: wrap;
 }
 
-/* Stile per l'input e il pulsante di verifica */
-#passwordInput, #verifyButton {
+#passwordInput, #verifyButton, #startButton {
     padding: 10px;
     font-size: 1em;
     border-radius: 5px;
     border: 1px solid #555;
 }
 
-#passwordInput {
-    background-color: #333;
-    color: #f0f0f0;
-}
+#passwordInput { background-color: #333; color: #f0f0f0; }
+#verifyButton { background-color: #28a745; color: #fff; cursor: pointer; }
+#startButton { background-color: #007bff; color: #fff; cursor: pointer; font-size: 1.2em; padding: 10px 20px; }
 
-#verifyButton {
-    background-color: #28a745;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+h1 { font-size: 3em; color: #28a745; }
+h1.defeat { color: #dc3545; }
 
-#verifyButton:hover {
-    background-color: #218838;
-}
-
-/* Stile per il messaggio di feedback */
-#feedback-message {
-    text-align: center;
-    margin-top: 15px;
-    font-weight: bold;
-    min-height: 24px;
-}
-
-/* Stile per i messaggi di fine gioco */
-h1 {
-    text-align: center;
-    font-size: 3em;
-    color: #28a745;
-}
-
-h1.defeat {
-    color: #dc3545;
-}
-
-/* Stile per i dati di verifica della vincita */
 #verification-data {
     background-color: #333;
-    border: 1px solid #555;
     padding: 15px;
     border-radius: 5px;
     margin-top: 20px;
     font-family: monospace;
-    word-wrap: break-word;
 }

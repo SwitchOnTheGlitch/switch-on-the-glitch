@@ -4,26 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Switch on the Glich</title>
-
     <link rel="stylesheet" href="css/style.css">
-
     <script src="js/game.js" defer></script>
 </head>
 <body>
 
-    <div id="game-container">
+    <div id="video-layer">
+        <video id="main-video" playsinline muted></video>
+    </div>
 
-        <div id="video-container">
-            <video id="main-video" width="100%" playsinline muted></video>
-        </div>
-
-        <div id="question-container" style="display: none;">
+    <div id="ui-layer">
+        <div id="game-container">
             </div>
-
-        <div id="controls-container">
-            <button id="startButton">Inizia Gioco</button>
-        </div>
-
     </div>
 
 </body>
