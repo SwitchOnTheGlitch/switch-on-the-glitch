@@ -21,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    position: relative; /* Necessario per posizionare il pulsante sopra il video */
 }
 
 /* Stili per le sezioni interne */
@@ -31,13 +32,13 @@ body {
     text-align: center;
 }
 
-/* Stile per il tag video, per assicurarsi che riempia il suo contenitore */
-#game-video {
+/* Stile per il tag video */
+#main-video {
     border-radius: 5px;
     background-color: #000;
 }
 
-/* Diamo un'altezza maggiore al contenitore del video */
+/* Altezza del contenitore video */
 #video-container {
     min-height: 400px;
     background-color: #000;
@@ -47,7 +48,18 @@ body {
     align-items: center;
 }
 
-/* Stile specifico per il pulsante d'inizio */
+/* Posizioniamo il pulsante 'Inizia' sopra il video */
+#controls-container {
+    position: absolute;
+    bottom: 40px; /* Distanza dal basso */
+    left: 50%;
+    transform: translateX(-50%); /* Lo centra perfettamente */
+    border: none;
+    background: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente */
+    padding: 10px;
+}
+
+/* Stile per il pulsante d'inizio */
 #startButton {
     padding: 10px 20px;
     font-size: 1.2em;
@@ -63,13 +75,18 @@ body {
     background-color: #0056b3;
 }
 
-/* Stile per il timer */
-#timer {
-    font-size: 1.8em;
+/* Stile per il timer e il contatore tentativi */
+#timer, #attempts-counter {
+    font-size: 1.5em;
     font-weight: bold;
-    color: #ffc107;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+#timer {
+    color: #ffc107;
+}
+#attempts-counter {
+    color: #17a2b8;
 }
 
 /* Contenitore per la sezione password */
@@ -81,7 +98,7 @@ body {
     flex-wrap: wrap;
 }
 
-/* Stile per l'input della password e il pulsante di verifica */
+/* Stile per l'input e il pulsante di verifica */
 #passwordInput, #verifyButton {
     padding: 10px;
     font-size: 1em;
@@ -117,33 +134,20 @@ body {
 h1 {
     text-align: center;
     font-size: 3em;
-    color: #dc3545;
-}
-
-h1:first-child {
     color: #28a745;
 }
 
-/* Stili per le domande a scelta multipla (che aggiungeremo con JS) */
-#question-text {
-    font-size: 1.4em;
-    margin-bottom: 20px;
+h1.defeat {
+    color: #dc3545;
 }
 
-.choice-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    background-color: #444;
-    color: #f0f0f0;
+/* Stile per i dati di verifica della vincita */
+#verification-data {
+    background-color: #333;
     border: 1px solid #555;
+    padding: 15px;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.choice-btn:hover {
-    background-color: #555;
+    margin-top: 20px;
+    font-family: monospace;
+    word-wrap: break-word;
 }

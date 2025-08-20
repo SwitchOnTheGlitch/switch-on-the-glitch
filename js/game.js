@@ -4,24 +4,44 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerInterval;
     let timeLeft = 60;
     const CORRECT_PASSWORD = "test";
+    let passwordAttempts = 5;
+    let gamePassword = "";
+    let boxId = "";
 
     // --- RIFERIMENTI AGLI ELEMENTI HTML ---
     const startButton = document.getElementById('startButton');
     const questionContainer = document.getElementById('question-container');
     const controlsContainer = document.getElementById('controls-container');
     const videoContainer = document.getElementById('video-container');
-    const gameVideo = document.getElementById('game-video'); 
+    const mainVideo = document.getElementById('main-video');
+
+    // --- FUNZIONI DI INIZIALIZZAZIONE ---
+    
+    // Funzione per riprodurre un video specifico
+    function playVideo(videoName, loop = false) {
+        mainVideo.src = `media/videos/${videoName}.mp4`;
+        mainVideo.loop = loop;
+        mainVideo.play();
+    }
+    
+    // All'avvio della pagina, parte il video di presentazione in loop
+    playVideo("Presentazione", true);
 
     // --- EVENT LISTENER ---
     startButton.addEventListener('click', startGame);
 
     // --- FUNZIONI PRINCIPALI ---
     function startGame() {
-        controlsContainer.style.display = 'none'; 
-        videoContainer.style.display = 'none'; 
+        mainVideo.loop = false; // Interrompiamo il loop del video di presentazione
+        videoContainer.style.display = 'none'; // Nascondiamo il video
+        controlsContainer.style.display = 'none'; // Nascondiamo il pulsante
+        questionContainer.style.display = 'block'; // Mostriamo l'area delle domande
+        
+        boxId = `BOX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
         questionContainer.innerHTML = `
             <div id="timer">Tempo Rimanente: ${timeLeft}</div>
+            <div id="attempts-counter">Tentativi Rimasti: ${passwordAttempts}</div>
             <div id="password-section">
                 <label for="passwordInput">Inserisci la Password:</label>
                 <input type="text" id="passwordInput" placeholder="Scrivi qui...">
@@ -48,66 +68,57 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
-        if (passwordInput.value.toLowerCase() === CORRECT_PASSWORD) {
+        gamePassword = passwordInput.value;
+
+        if (gamePassword.toLowerCase() === CORRECT_PASSWORD) {
             clearInterval(timerInterval);
-            playVideoEnigma(); 
+            endGame(true, "Password corretta!");
         } else {
+            passwordAttempts--;
+            const attemptsCounter = document.getElementById('attempts-counter');
             const feedbackMessage = document.getElementById('feedback-message');
+            
+            attemptsCounter.textContent = `Tentativi Rimasti: ${passwordAttempts}`;
             feedbackMessage.textContent = "Password errata. Riprova!";
             feedbackMessage.style.color = "red";
-        }
-    }
 
-    function playVideoEnigma() {
-        questionContainer.style.display = 'none'; 
-        videoContainer.style.display = 'flex'; 
-
-        // ## ECCO LA MODIFICA! ##
-        // Il percorso ora punta al tuo video.
-        // Assicurati che il tuo file si chiami 'Vittoria.mp4' o modifica il nome qui.
-        gameVideo.src = "media/videos/Vittoria.mp4";
-        
-        gameVideo.addEventListener('ended', showFirstQuestion);
-        
-        gameVideo.muted = true;
-        gameVideo.play();
-    }
-
-    function showFirstQuestion() {
-        videoContainer.style.display = 'none'; 
-        questionContainer.style.display = 'block'; 
-
-        questionContainer.innerHTML = `
-            <div id="question-text">Qual era il colore della macchina nel video?</div>
-            <button class="choice-btn" data-correct="false">Rossa</button>
-            <button class="choice-btn" data-correct="true">Blu</button>
-            <button class="choice-btn" data-correct="false">Gialla</button>
-        `;
-
-        const choiceButtons = document.querySelectorAll('.choice-btn');
-        choiceButtons.forEach(button => {
-            button.addEventListener('click', checkAnswer);
-        });
-    }
-
-    function checkAnswer(event) {
-        const selectedButton = event.target;
-        const isCorrect = selectedButton.dataset.correct === 'true';
-
-        if (isCorrect) {
-            endGame(true, "Risposta esatta!");
-        } else {
-            endGame(false, "Risposta sbagliata!");
+            if (passwordAttempts <= 0) {
+                clearInterval(timerInterval);
+                endGame(false, "Hai esaurito i tentativi!");
+            }
         }
     }
 
     function endGame(isVictory, message) {
+        questionContainer.style.display = 'none'; // Nascondiamo l'area domande
+        videoContainer.style.display = 'flex'; // Mostriamo quella video
+
         if (isVictory) {
-            questionContainer.innerHTML = `<h1>VITTORIA!</h1><p>${message}</p>`;
+            playVideo("Vittoria");
+            // Quando il video di vittoria finisce, mostriamo i dati
+            mainVideo.onended = () => {
+                videoContainer.style.display = 'none';
+                questionContainer.style.display = 'block';
+                questionContainer.innerHTML = `
+                    <h1>VITTORIA!</h1>
+                    <p>${message}</p>
+                    <div id="verification-data">
+                        <p><strong>ID Box:</strong> ${boxId}</p>
+                        <p><strong>Password Usata:</strong> ${gamePassword}</p>
+                    </div>
+                `;
+            };
         } else {
-            questionContainer.innerHTML = `<h1>SCONFITTA!</h1><p>${message}</p>`;
+            // Scegliamo il video di sconfitta corretto
+            const defeatVideo = message.includes("Tempo") ? "Tempo" : "Tentativi";
+            playVideo(defeatVideo);
+            // Alla fine del video di sconfitta, mostriamo il messaggio
+            mainVideo.onended = () => {
+                videoContainer.style.display = 'none';
+                questionContainer.style.display = 'block';
+                questionContainer.innerHTML = `<h1 class="defeat">SCONFITTA!</h1><p>${message}</p>`;
+            };
         }
-        questionContainer.style.display = 'block';
     }
 
 });
