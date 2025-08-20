@@ -10,17 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionContainer = document.getElementById('question-container');
     const controlsContainer = document.getElementById('controls-container');
     const videoContainer = document.getElementById('video-container');
-    const gameVideo = document.getElementById('game-video'); // Nuovo elemento video
+    const gameVideo = document.getElementById('game-video'); 
 
     // --- EVENT LISTENER ---
     startButton.addEventListener('click', startGame);
 
     // --- FUNZIONI PRINCIPALI ---
     function startGame() {
-        controlsContainer.style.display = 'none'; // Nascondiamo solo il pulsante di avvio
-        videoContainer.style.display = 'none'; // Nascondiamo il video all'inizio
+        controlsContainer.style.display = 'none'; 
+        videoContainer.style.display = 'none'; 
 
-        // Mostriamo subito la schermata della password
         questionContainer.innerHTML = `
             <div id="timer">Tempo Rimanente: ${timeLeft}</div>
             <div id="password-section">
@@ -50,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
         if (passwordInput.value.toLowerCase() === CORRECT_PASSWORD) {
-            clearInterval(timerInterval); // Fermiamo il timer
-            // Invece di finire il gioco, facciamo partire il video-enigma
+            clearInterval(timerInterval);
             playVideoEnigma(); 
         } else {
             const feedbackMessage = document.getElementById('feedback-message');
@@ -61,30 +59,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playVideoEnigma() {
-        questionContainer.style.display = 'none'; // Nascondiamo la sezione domande
-        videoContainer.style.display = 'flex'; // Mostriamo quella del video
+        questionContainer.style.display = 'none'; 
+        videoContainer.style.display = 'flex'; 
 
-        // Impostiamo la fonte del video. Useremo un video di prova gratuito.
-        gameVideo.src = "https://videos.pexels.com/video-files/2099391/2099391-hd_1280_720_25fps.mp4";
+        // ## ECCO LA MODIFICA! ##
+        // Il percorso ora punta al tuo video.
+        // Assicurati che il tuo file si chiami 'Vittoria.mp4' o modifica il nome qui.
+        gameVideo.src = "media/videos/Vittoria.mp4";
         
-        // Quando il video finisce, mostriamo la domanda
         gameVideo.addEventListener('ended', showFirstQuestion);
         
+        gameVideo.muted = true;
         gameVideo.play();
     }
 
     function showFirstQuestion() {
-        videoContainer.style.display = 'none'; // Nascondiamo di nuovo il video
-        questionContainer.style.display = 'block'; // E mostriamo le domande
+        videoContainer.style.display = 'none'; 
+        questionContainer.style.display = 'block'; 
 
         questionContainer.innerHTML = `
             <div id="question-text">Qual era il colore della macchina nel video?</div>
-            <button class="choice-btn">Rossa</button>
-            <button class="choice-btn">Blu</button>
-            <button class="choice-btn">Gialla</button>
+            <button class="choice-btn" data-correct="false">Rossa</button>
+            <button class="choice-btn" data-correct="true">Blu</button>
+            <button class="choice-btn" data-correct="false">Gialla</button>
         `;
 
-        // Aggiungeremo la logica per i pulsanti di risposta nel prossimo step
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+        choiceButtons.forEach(button => {
+            button.addEventListener('click', checkAnswer);
+        });
+    }
+
+    function checkAnswer(event) {
+        const selectedButton = event.target;
+        const isCorrect = selectedButton.dataset.correct === 'true';
+
+        if (isCorrect) {
+            endGame(true, "Risposta esatta!");
+        } else {
+            endGame(false, "Risposta sbagliata!");
+        }
     }
 
     function endGame(isVictory, message) {
@@ -93,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             questionContainer.innerHTML = `<h1>SCONFITTA!</h1><p>${message}</p>`;
         }
-        questionContainer.style.display = 'block'; // Assicuriamoci che sia visibile
+        questionContainer.style.display = 'block';
     }
 
 });
