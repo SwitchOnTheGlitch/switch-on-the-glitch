@@ -17,14 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNZIONI DI INIZIALIZZAZIONE ---
     
-    // Funzione per riprodurre un video specifico
     function playVideo(videoName, loop = false) {
         mainVideo.src = `media/videos/${videoName}.mp4`;
         mainVideo.loop = loop;
         mainVideo.play();
     }
     
-    // All'avvio della pagina, parte il video di presentazione in loop
     playVideo("Presentazione", true);
 
     // --- EVENT LISTENER ---
@@ -32,10 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNZIONI PRINCIPALI ---
     function startGame() {
-        mainVideo.loop = false; // Interrompiamo il loop del video di presentazione
-        videoContainer.style.display = 'none'; // Nascondiamo il video
-        controlsContainer.style.display = 'none'; // Nascondiamo il pulsante
-        questionContainer.style.display = 'block'; // Mostriamo l'area delle domande
+        mainVideo.loop = false;
+        videoContainer.style.display = 'none';
+        controlsContainer.style.display = 'none';
+        questionContainer.style.display = 'block';
         
         boxId = `BOX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
@@ -81,6 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
             attemptsCounter.textContent = `Tentativi Rimasti: ${passwordAttempts}`;
             feedbackMessage.textContent = "Password errata. Riprova!";
             feedbackMessage.style.color = "red";
+            
+            // ## ECCO LA MODIFICA! ##
+            // Azzeriamo il campo di input dopo la verifica
+            passwordInput.value = "";
 
             if (passwordAttempts <= 0) {
                 clearInterval(timerInterval);
@@ -90,12 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function endGame(isVictory, message) {
-        questionContainer.style.display = 'none'; // Nascondiamo l'area domande
-        videoContainer.style.display = 'flex'; // Mostriamo quella video
+        questionContainer.style.display = 'none';
+        videoContainer.style.display = 'flex';
 
         if (isVictory) {
             playVideo("Vittoria");
-            // Quando il video di vittoria finisce, mostriamo i dati
             mainVideo.onended = () => {
                 videoContainer.style.display = 'none';
                 questionContainer.style.display = 'block';
@@ -109,10 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             };
         } else {
-            // Scegliamo il video di sconfitta corretto
             const defeatVideo = message.includes("Tempo") ? "Tempo" : "Tentativi";
             playVideo(defeatVideo);
-            // Alla fine del video di sconfitta, mostriamo il messaggio
             mainVideo.onended = () => {
                 videoContainer.style.display = 'none';
                 questionContainer.style.display = 'block';
