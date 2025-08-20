@@ -71,10 +71,12 @@ body {
     flex-direction: column;
     gap: 20px;
     backdrop-filter: blur(10px);
+    position: relative; /* ## ECCO LA CORREZIONE! ## Aggiunto per ancorare gli elementi interni */
 }
 
-/* ## NUOVI STILI PER LA SCHERMATA INIZIALE ## */
+/* Stili per la schermata iniziale */
 #start-screen-container {
+    /* Ora questo si posizionerà al centro del #game-container, non della pagina */
     position: absolute;
     top: 50%;
     left: 50%;
@@ -83,22 +85,21 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px; /* Spazio tra titolo e pulsante */
+    gap: 30px;
     width: 100%;
 }
 
 #start-title {
     font-family: 'Rubik Glitch', cursive;
-    font-size: 4em; /* Aumentiamo un po' la dimensione */
+    font-size: 4em;
     color: #fff;
-    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8); /* Ombra arancione */
+    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
 }
 
-/* Stile pulsante Inizia */
 #startButton {
     width: 120px;
     height: 120px;
-    font-size: 1.8em; /* Testo più grande */
+    font-size: 1.8em;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.5);
     border: 2px solid #fff;
