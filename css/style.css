@@ -1,0 +1,62 @@
+/* Regole di base per l'intera pagina */
+body {
+    font-family: sans-serif; /* Usiamo un font pulito e leggibile */
+    background-color: #1a1a1a; /* Un colore di sfondo scuro per dare un'atmosfera da gioco */
+    color: #f0f0f0; /* Un colore di testo chiaro per il contrasto */
+
+    /* Queste tre righe servono a centrare perfettamente il nostro gioco nella pagina */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Altezza minima pari al 100% della finestra */
+    margin: 0; /* Rimuoviamo i margini predefiniti */
+}
+
+/* Stile del contenitore principale del gioco */
+#game-container {
+    width: 800px; /* Larghezza fissa per il nostro gioco */
+    max-width: 95%; /* Si restringe un po' su schermi piccoli */
+    background-color: #2b2b2b; /* Un grigio scuro per far risaltare il contenitore */
+    border: 2px solid #444; /* Un bordo sottile per definirne i limiti */
+    border-radius: 10px; /* Angoli arrotondati per un look più moderno */
+    padding: 20px; /* Spazio interno per non far toccare gli elementi sui bordi */
+
+    /* Usiamo Flexbox per allineare gli elementi interni (video, domande, controlli) in colonna */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Aggiunge uno spazio di 20px tra ogni sezione interna */
+}
+
+/* Stili per le sezioni interne */
+#video-container, #question-container, #controls-container {
+    border: 1px dashed #555; /* Bordo tratteggiato per vedere i limiti di ogni sezione */
+    padding: 15px; /* Spazio interno anche per queste sezioni */
+    border-radius: 5px;
+    text-align: center; /* Centriamo il testo all'interno */
+}
+
+/* Diamo un'altezza maggiore al contenitore del video per simulare lo spazio che occuperà */
+#video-container {
+    min-height: 400px;
+    background-color: #000; /* Sfondo nero per l'area video */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Stile specifico per il pulsante */
+#startButton {
+    padding: 10px 20px; /* Spazio interno per rendere il pulsante più grande */
+    font-size: 1.2em; /* Testo più grande */
+    color: #fff;
+    background-color: #007bff; /* Un blu acceso */
+    border: none; /* Nessun bordo */
+    border-radius: 5px;
+    cursor: pointer; /* Il mouse diventa una manina quando ci passa sopra */
+    transition: background-color 0.3s; /* Effetto di transizione sul colore */
+}
+
+/* Cambia colore al pulsante quando ci passiamo sopra con il mouse */
+#startButton:hover {
+    background-color: #0056b3;
+}
