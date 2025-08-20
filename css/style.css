@@ -59,13 +59,11 @@ body {
     align-items: center;
 }
 
-/* Contenitore principale del gioco */
+/* Contenitore principale del gioco (trasparente) */
 #game-container {
-    /* ## MODIFICHE QUI ## */
-    background-color: transparent; /* Sfondo trasparente */
-    border: none; /* Nessun bordo */
-    backdrop-filter: none; /* Nessun effetto sfocatura */
-
+    background-color: transparent;
+    border: none;
+    backdrop-filter: none;
     width: 800px;
     max-width: 95%;
     min-height: 500px;
@@ -82,7 +80,7 @@ body {
     font-family: 'Rubik Glitch', cursive;
     font-size: 4em;
     color: #fff;
-    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8), 0 0 5px rgba(0, 0, 0, 1); /* Aggiunta un'ombra nera per più contrasto */
+    text-shadow: 0 0 15px rgba(255, 165, 0, 0.8), 0 0 5px rgba(0, 0, 0, 1);
     text-align: center;
 }
 
@@ -116,7 +114,7 @@ body {
     font-size: 1.5em;
     font-weight: normal;
     margin-bottom: 15px;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 1); /* Ombra per leggibilità sul video */
+    text-shadow: 0 0 5px rgba(0, 0, 0, 1);
 }
 #timer { color: #ffc107; }
 #attempts-counter { color: #17a2b8; }
@@ -151,9 +149,22 @@ h1 {
 h1.defeat { color: #dc3545; }
 
 #verification-data {
-    background-color: rgba(51, 51, 51, 0.8); /* Leggera trasparenza anche qui */
+    background-color: rgba(51, 51, 51, 0.8);
     padding: 15px;
     border-radius: 5px;
     margin-top: 20px;
     font-family: 'Roboto', monospace;
+}
+
+/* Stile per il pulsante Riprova */
+#restartButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Rubik Marker Hatch', cursive;
 }

@@ -16,29 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const muteButton = document.getElementById('mute-button');
 
     // --- FUNZIONI DI GESTIONE VIDEO E UI ---
-    function playVideo(videoName, loop = false, onEndedCallback = null) {
+    function playVideo(videoName, loop = false) {
         mainVideo.src = `media/videos/${videoName}.mp4`;
         mainVideo.loop = loop;
         mainVideo.muted = isMuted;
         mainVideo.style.display = 'block';
-        
-        let playPromise = mainVideo.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                console.log("Autoplay bloccato, attendo interazione utente.");
-            });
-        }
-        
-        mainVideo.onended = onEndedCallback;
+        mainVideo.play().catch(e => console.log("Errore autoplay video:", e));
     }
 
     function showUI(content) {
         gameContainer.innerHTML = content;
         uiLayer.style.display = 'flex';
-    }
-
-    function hideUI() {
-        uiLayer.style.display = 'none';
     }
     
     // --- GESTIONE AUDIO ---
@@ -47,27 +35,24 @@ document.addEventListener('DOMContentLoaded', () => {
         mainVideo.muted = isMuted;
         muteButton.textContent = isMuted ? '🔇' : '🔊';
     }
-    
     muteButton.addEventListener('click', toggleMute);
 
     // --- FLUSSO DEL GIOCO ---
 
     // 1. STATO INIZIALE
     function initializeGame() {
-        // ## ECCO LA MODIFICA! ##
-        // Inseriamo gli elementi direttamente nel game-container, senza un div intermedio.
-        gameContainer.innerHTML = `
-            <h2 id="start-title">Risolvi il Glitch!</h2>
-            <button id="startButton">Vai</button>
-        `;
-        uiLayer.style.display = 'flex'; // Assicuriamoci che l'UI sia visibile
-        
+        showUI(`<button id="startButton">Vai</button>`);
         document.getElementById('startButton').addEventListener('click', startGame);
         playVideo("Presentazione", true);
     }
     
     // 2. AVVIO DEL GIOCO
     function startGame() {
+        // ## MODIFICA ##: Attiviamo l'audio automaticamente
+        if (isMuted) {
+            toggleMute();
+        }
+        
         boxId = `BOX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
         playVideo("Gioco", true);
         
@@ -85,8 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer();
     }
 
-    // ... (Il resto del file rimane invariato) ...
-
+    // 3. CONTROLLO PASSWORD
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
         gamePassword = passwordInput.value;
@@ -107,34 +91,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 4. FINE DEL GIOCO
     function endGame(isVictory, message) {
-        hideUI();
         let finalVideo;
-        let onEndCallback;
+        let finalUI;
 
         if (isVictory) {
             finalVideo = "Vittoria";
-            onEndCallback = () => {
-                mainVideo.style.display = 'none';
-                showUI(`
-                    <h1>VITTORIA!</h1>
-                    <p>${message}</p>
-                    <div id="verification-data">
-                        <p><strong>ID Box:</strong> ${boxId}</p>
-                        <p><strong>Password Usata:</strong> ${gamePassword}</p>
-                    </div>
-                `);
-            };
+            finalUI = `
+                <h1>VITTORIA!</h1>
+                <p>${message}</p>
+                <div id="verification-data">
+                    <p><strong>ID Box:</strong> ${boxId}</p>
+                    <p><strong>Password Usata:</strong> ${gamePassword}</p>
+                </div>
+            `;
         } else {
             finalVideo = message.includes("Tempo") ? "Tempo" : "Tentativi";
-            onEndCallback = () => {
-                mainVideo.style.display = 'none';
-                showUI(`<h1 class="defeat">SCONFITTA!</h1><p>${message}</p>`);
-            };
+            finalUI = `
+                <h1 class="defeat">SCONFITTA!</h1>
+                <p>${message}</p>
+                <button id="restartButton">Riprova</button>
+            `;
         }
-        playVideo(finalVideo, false, onEndCallback);
+        
+        // ## MODIFICA ##: Mostriamo video e UI contemporaneamente
+        playVideo(finalVideo, true); // Tutti i video ora girano in loop
+        showUI(finalUI);
+        
+        // Se c'è il pulsante riprova, gli diamo la sua funzione
+        const restartButton = document.getElementById('restartButton');
+        if (restartButton) {
+            restartButton.addEventListener('click', () => {
+                location.reload(); // Ricarica la pagina per ricominciare
+            });
+        }
     }
 
+    // 5. TIMER
     function startTimer() {
         const timerElement = document.getElementById('timer');
         timerInterval = setInterval(() => {
