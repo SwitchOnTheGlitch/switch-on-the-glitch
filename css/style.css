@@ -63,36 +63,26 @@ body {
 #game-container {
     width: 800px;
     max-width: 95%;
-    min-height: 500px; /* Diamo un'altezza minima per coerenza */
+    min-height: 500px;
     background-color: rgba(43, 43, 43, 0.85);
     border: 2px solid #444;
     border-radius: 10px;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* ## CORREZIONE 1 ## Centra il contenuto verticalmente */
-    align-items: center; /* ## CORREZIONE 2 ## Centra il contenuto orizzontalmente */
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 30px; /* Aumentato lo spazio tra gli elementi */
     backdrop-filter: blur(10px);
 }
 
-/* Stili per la schermata iniziale */
-#start-screen-container {
-    /* ## CORREZIONE 3 ## Rimosso 'position: absolute' e le relative proprietà.
-       Ora si centra grazie a Flexbox del genitore #game-container */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    width: 100%;
-}
-
+/* ## Stile per la schermata iniziale (ora elementi diretti) ## */
 #start-title {
     font-family: 'Rubik Glitch', cursive;
     font-size: 4em;
     color: #fff;
     text-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
-    text-align: center; /* Aggiunto per sicurezza su schermi piccoli */
+    text-align: center;
 }
 
 #startButton {
@@ -110,7 +100,7 @@ body {
     text-transform: uppercase;
     font-family: 'Rubik Marker Hatch', cursive;
     animation: pulse-animation 2s infinite;
-    flex-shrink: 0; /* Impedisce al pulsante di rimpicciolirsi */
+    flex-shrink: 0;
 }
 
 @keyframes pulse-animation {

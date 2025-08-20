@@ -52,16 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FLUSSO DEL GIOCO ---
 
-    // 1. STATO INIZIALE: Video di presentazione con titolo e nuovo pulsante
+    // 1. STATO INIZIALE
     function initializeGame() {
-        // ## ECCO LE MODIFICHE! ##
-        // Aggiungiamo un titolo H2 e cambiamo il testo del pulsante in "Vai"
-        showUI(`
-            <div id="start-screen-container">
-                <h2 id="start-title">Risolvi il Glitch!</h2>
-                <button id="startButton">Vai</button>
-            </div>
-        `);
+        // ## ECCO LA MODIFICA! ##
+        // Inseriamo gli elementi direttamente nel game-container, senza un div intermedio.
+        gameContainer.innerHTML = `
+            <h2 id="start-title">Risolvi il Glitch!</h2>
+            <button id="startButton">Vai</button>
+        `;
+        uiLayer.style.display = 'flex'; // Assicuriamoci che l'UI sia visibile
+        
         document.getElementById('startButton').addEventListener('click', startGame);
         playVideo("Presentazione", true);
     }
@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer();
     }
 
-    // 3. CONTROLLO PASSWORD
+    // ... (Il resto del file rimane invariato) ...
+
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
         gamePassword = passwordInput.value;
@@ -106,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. FINE DEL GIOCO
     function endGame(isVictory, message) {
         hideUI();
         let finalVideo;
@@ -135,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         playVideo(finalVideo, false, onEndCallback);
     }
 
-    // --- TIMER ---
     function startTimer() {
         const timerElement = document.getElementById('timer');
         timerInterval = setInterval(() => {
@@ -148,6 +147,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    // Avviamo il tutto
     initializeGame();
 });
