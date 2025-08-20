@@ -1,7 +1,5 @@
-/* 1. IMPORTAZIONE DEI FONT */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Rubik+Glitch&family=Rubik+Marker+Hatch&display=swap');
 
-/* Stile base per resettare la pagina */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,7 +12,6 @@ body {
     color: #f0f0f0;
 }
 
-/* Layer per i video a schermo intero */
 #video-layer {
     position: fixed;
     top: 0;
@@ -30,7 +27,6 @@ body {
     object-fit: cover;
 }
 
-/* Layer per l'interfaccia utente */
 #ui-layer {
     position: relative;
     z-index: 10;
@@ -40,7 +36,6 @@ body {
     min-height: 100vh;
 }
 
-/* Pulsante Mute/Unmute */
 #mute-button {
     position: fixed;
     top: 20px;
@@ -59,7 +54,6 @@ body {
     align-items: center;
 }
 
-/* Contenitore principale del gioco (trasparente) */
 #game-container {
     background-color: transparent;
     border: none;
@@ -75,7 +69,6 @@ body {
     gap: 30px;
 }
 
-/* Stile per la schermata iniziale */
 #start-title {
     font-family: 'Rubik Glitch', cursive;
     font-size: 4em;
@@ -108,7 +101,6 @@ body {
     100% { box-shadow: 0 0 20px 0 rgba(255, 165, 0, 0.7); }
 }
 
-/* Stili per i contenuti di gioco */
 #timer, #attempts-counter {
     font-family: 'Rubik Marker Hatch', cursive;
     font-size: 1.5em;
@@ -116,9 +108,9 @@ body {
     margin-bottom: 15px;
     text-shadow: 0 0 5px rgba(0, 0, 0, 1);
 }
-/* ## MODIFICA ##: Nuovi colori */
-#timer { color: #dc3545; } /* Rosso */
-#attempts-counter { color: #ffc107; } /* Arancione */
+
+#timer { color: #dc3545; }
+#attempts-counter { color: #ffc107; }
 
 #password-section {
     display: flex;
@@ -137,6 +129,7 @@ body {
     border: 1px solid #555;
     font-family: 'Rubik Marker Hatch', cursive;
 }
+
 #passwordInput { background-color: #333; color: #f0f0f0; font-family: 'Roboto', sans-serif; }
 #verifyButton { background-color: #28a245; color: #fff; cursor: pointer; }
 
@@ -147,16 +140,15 @@ h1 {
     text-align: center;
     text-shadow: 0 0 10px rgba(0, 0, 0, 1);
 }
+
 h1.defeat { color: #dc3545; }
 
-/* ## NUOVO STILE ##: Messaggio di fine gioco */
 .end-message {
     font-family: 'Rubik Marker Hatch', cursive;
-    font-size: 2em; /* Più grande */
-    color: #dc3545; /* Rosso */
+    font-size: 2em;
+    color: #dc3545;
     text-shadow: 0 0 5px rgba(0, 0, 0, 1);
 }
-
 
 #verification-data {
     background-color: rgba(51, 51, 51, 0.8);

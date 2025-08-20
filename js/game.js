@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- CONFIGURAZIONE ---
     const API_URL = "https://script.google.com/macros/s/AKfycbzHkn-yorhu1UlocZf9PDL-2HZU6DLxvO4qsrNhEY0zhkR5fJPyiKXz32JZRCgNOPCBvA/exec";
     
-    // --- VARIABILI GLOBALI ---
     let timerInterval;
     let timeLeft = 60;
     let correctPassword = "";
@@ -13,13 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let sessionId = "";
     let isMuted = true;
 
-    // --- RIFERIMENTI AGLI ELEMENTI HTML ---
     const gameContainer = document.getElementById('game-container');
     const mainVideo = document.getElementById('main-video');
     const uiLayer = document.getElementById('ui-layer');
     const muteButton = document.getElementById('mute-button');
     
-    // --- FUNZIONI DI GESTIONE VIDEO E UI ---
     function playVideo(videoName, loop = false) {
         mainVideo.src = `media/videos/${videoName}.mp4`;
         mainVideo.loop = loop;
@@ -34,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         uiLayer.style.display = 'flex';
     }
     
-    // --- GESTIONE AUDIO ---
     function toggleMute() {
         isMuted = !isMuted;
         mainVideo.muted = isMuted;
@@ -42,9 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     muteButton.addEventListener('click', toggleMute);
 
-    // --- FLUSSO DEL GIOCO ---
-
-    // 1. STATO INIZIALE
     async function initializeGame() {
         const urlParams = new URLSearchParams(window.location.search);
         boxId = urlParams.get('box');
@@ -75,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // 2. AVVIO DEL GIOCO
     function startGame() {
         if (isMuted) toggleMute();
         sessionId = `SESSION-${Date.now()}`;
@@ -95,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer();
     }
 
-    // 3. CONTROLLO PASSWORD
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
         gamePassword = passwordInput.value;
@@ -115,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. FINE DEL GIOCO
     function endGame(isVictory, message) {
         const resultPayload = {
             isVictory: isVictory,
@@ -145,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 5. TIMER
     function startTimer() {
         const timerElement = document.getElementById('timer');
         timerInterval = setInterval(() => {
