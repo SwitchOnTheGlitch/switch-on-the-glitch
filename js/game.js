@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- VARIABILI GLOBALI ---
     let timerInterval;
     let timeLeft = 60;
-    let correctPassword = ""; // La password corretta arriverà dall'API
+    let correctPassword = "";
     let passwordAttempts = 5;
     let gamePassword = "";
     let boxId = "";
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FLUSSO DEL GIOCO ---
 
-    // 1. STATO INIZIALE: Contatta l'API per verificare la box
+    // 1. STATO INIZIALE
     async function initializeGame() {
         const urlParams = new URLSearchParams(window.location.search);
         boxId = urlParams.get('box');
@@ -55,12 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // Contattiamo l'API per verificare lo stato e ottenere la password
             const response = await fetch(`${API_URL}?action=getGameData&boxId=${boxId}`);
             const data = await response.json();
 
             if (data.status === 'success') {
-                correctPassword = data.password; // Salviamo la password vera
+                correctPassword = data.password;
                 showUI(`
                     <h2 id="start-title">Risolvi il Glitch!</h2>
                     <button id="startButton">Vai</button>
@@ -96,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer();
     }
 
-    // 3. CONTROLLO PASSWORD (ora usa la password dinamica)
+    // 3. CONTROLLO PASSWORD
     function checkPassword() {
         const passwordInput = document.getElementById('passwordInput');
         gamePassword = passwordInput.value;
@@ -116,14 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. FINE DEL GIOCO: Comunica il risultato all'API
+    // 4. FINE DEL GIOCO
     function endGame(isVictory, message) {
         const resultPayload = {
             isVictory: isVictory,
             passwordUsed: gamePassword,
             attemptsLeft: passwordAttempts
         };
-        // Comunichiamo all'API la fine della sessione in background
         fetch(`${API_URL}?action=endSession&boxId=${boxId}&sessionId=${sessionId}&result=${JSON.stringify(resultPayload)}`);
 
         const finalVideo = isVictory ? "vittoria" : (message.includes("Tempo") ? "tempo" : "tentativi");
