@@ -1,81 +1,84 @@
 /* Regole di base per l'intera pagina */
 body {
-    font-family: sans-serif; /* Usiamo un font pulito e leggibile */
-    background-color: #1a1a1a; /* Un colore di sfondo scuro per dare un'atmosfera da gioco */
-    color: #f0f0f0; /* Un colore di testo chiaro per il contrasto */
-
-    /* Queste tre righe servono a centrare perfettamente il nostro gioco nella pagina */
+    font-family: sans-serif;
+    background-color: #1a1a1a;
+    color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Altezza minima pari al 100% della finestra */
-    margin: 0; /* Rimuoviamo i margini predefiniti */
+    min-height: 100vh;
+    margin: 0;
 }
 
 /* Stile del contenitore principale del gioco */
 #game-container {
-    width: 800px; /* Larghezza fissa per il nostro gioco */
-    max-width: 95%; /* Si restringe un po' su schermi piccoli */
-    background-color: #2b2b2b; /* Un grigio scuro per far risaltare il contenitore */
-    border: 2px solid #444; /* Un bordo sottile per definirne i limiti */
-    border-radius: 10px; /* Angoli arrotondati per un look più moderno */
-    padding: 20px; /* Spazio interno per non far toccare gli elementi sui bordi */
-
-    /* Usiamo Flexbox per allineare gli elementi interni (video, domande, controlli) in colonna */
+    width: 800px;
+    max-width: 95%;
+    background-color: #2b2b2b;
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Aggiunge uno spazio di 20px tra ogni sezione interna */
+    gap: 20px;
 }
 
 /* Stili per le sezioni interne */
 #video-container, #question-container, #controls-container {
-    border: 1px dashed #555; /* Bordo tratteggiato per vedere i limiti di ogni sezione */
-    padding: 15px; /* Spazio interno anche per queste sezioni */
+    border: 1px dashed #555;
+    padding: 15px;
     border-radius: 5px;
-    text-align: center; /* Centriamo il testo all'interno */
+    text-align: center;
 }
 
-/* Diamo un'altezza maggiore al contenitore del video per simulare lo spazio che occuperà */
+/* Stile per il tag video, per assicurarsi che riempia il suo contenitore */
+#game-video {
+    border-radius: 5px;
+    background-color: #000;
+}
+
+/* Diamo un'altezza maggiore al contenitore del video */
 #video-container {
     min-height: 400px;
-    background-color: #000; /* Sfondo nero per l'area video */
+    background-color: #000;
+    padding: 5px; /* Riduciamo il padding per dare più spazio al video */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Stile specifico per il pulsante */
+/* Stile specifico per il pulsante d'inizio */
 #startButton {
-    padding: 10px 20px; /* Spazio interno per rendere il pulsante più grande */
-    font-size: 1.2em; /* Testo più grande */
+    padding: 10px 20px;
+    font-size: 1.2em;
     color: #fff;
-    background-color: #007bff; /* Un blu acceso */
-    border: none; /* Nessun bordo */
+    background-color: #007bff;
+    border: none;
     border-radius: 5px;
-    cursor: pointer; /* Il mouse diventa una manina quando ci passa sopra */
-    transition: background-color 0.3s; /* Effetto di transizione sul colore */
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-/* Cambia colore al pulsante quando ci passiamo sopra con il mouse */
 #startButton:hover {
     background-color: #0056b3;
 }
+
 /* Stile per il timer */
 #timer {
-    font-size: 1.8em; /* Più grande e visibile */
+    font-size: 1.8em;
     font-weight: bold;
-    color: #ffc107; /* Un colore ambrato per risaltare */
+    color: #ffc107;
     text-align: center;
     margin-bottom: 20px;
 }
 
 /* Contenitore per la sezione password */
 #password-section {
-    display: flex; /* Usiamo flexbox per allineare gli elementi */
-    justify-content: center; /* Li centriamo orizzontalmente */
-    align-items: center; /* Li allineiamo verticalmente */
-    gap: 10px; /* Spazio tra gli elementi */
-    flex-wrap: wrap; /* Permette di andare a capo su schermi piccoli */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* Stile per l'input della password e il pulsante di verifica */
@@ -92,7 +95,7 @@ body {
 }
 
 #verifyButton {
-    background-color: #28a745; /* Verde per l'azione di verifica */
+    background-color: #28a745;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -102,22 +105,45 @@ body {
     background-color: #218838;
 }
 
-/* Stile per il messaggio di feedback (es. "Password errata") */
+/* Stile per il messaggio di feedback */
 #feedback-message {
     text-align: center;
     margin-top: 15px;
     font-weight: bold;
-    min-height: 24px; /* Altezza minima per non far "saltare" il layout */
+    min-height: 24px;
 }
 
 /* Stile per i messaggi di fine gioco */
 h1 {
     text-align: center;
     font-size: 3em;
-    color: #dc3545; /* Rosso per la sconfitta */
+    color: #dc3545;
 }
 
-/* Sovrascriviamo il colore per la vittoria */
 h1:first-child {
-    color: #28a745; /* Verde per la vittoria */
+    color: #28a745;
+}
+
+/* Stili per le domande a scelta multipla (che aggiungeremo con JS) */
+#question-text {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+}
+
+.choice-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.choice-btn:hover {
+    background-color: #555;
 }
